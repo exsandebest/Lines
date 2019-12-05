@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EnterName</class>
+ <widget class="QDialog" name="EnterName">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1380</width>
+    <height>443</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Game Over</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="src.qrc">
+    <normaloff>:/src/img/iс.ico</normaloff>:/src/img/iс.ico</iconset>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>50</y>
+     <width>361</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>36</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:white;</string>
+   </property>
+   <property name="text">
+    <string>Enter your name</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineName">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>160</y>
+     <width>531</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit#lineName{
+background-color:qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 rgb(0, 85, 255), stop: 1 rgb(255, 37, 69));
+color: rgb(255, 255, 255);
+border-radius: 30px;
+}
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnSaveName">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>310</y>
+     <width>191</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#btnSaveName{
+color: #fff;
+   border-radius: 15px;
+   border: 4px solid rgb(37, 204, 255);
+   background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 rgb(138, 42, 255), stop: 1 rgb(214, 90, 255));
+}
+
+QPushButton#btnSaveName:hover{
+background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0 rgb(142, 29, 255), stop: 1 rgb(255, 47, 245));
+border: 4px solid rgb(26, 255, 236);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblYourScore">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>240</y>
+     <width>451</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>36</pointsize>
+     <underline>true</underline>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:white
+</string>
+   </property>
+   <property name="text">
+    <string>Yout score is </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblGameOver">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>60</y>
+     <width>601</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>48</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnDontSave">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>310</y>
+     <width>201</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>ELEGANCE</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#btnDontSave{
+color: #fff;
+   border-radius: 15px;
+   border: 4px solid rgb(37, 204, 255);
+   background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 rgb(138, 42, 255), stop: 1 rgb(214, 90, 255));
+}
+
+QPushButton#btnDontSave:hover{
+background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0 rgb(142, 29, 255), stop: 1 rgb(255, 47, 245));
+border: 4px solid rgb(26, 255, 236);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Don't save</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="src.qrc"/>
+ </resources>
+ <connections/>
+</ui>
