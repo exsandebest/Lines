@@ -9,7 +9,7 @@ Settings::Settings(QWidget *parent) :
     ui(new Ui::Settings)
 {
     ui->setupUi(this);
-
+    this->setFixedSize(585,575);
     QPixmap t(":src/img/label_settings.png");
     t = t.scaled(ui->lblTitle->size());
     ui->lblTitle->setPixmap(t);

@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "QPushButton"
 #include "QTime"
-#include "QDebug"
 #include "QMessageBox"
 #include "menu.h"
 #include "scoreboard.h"
@@ -44,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Menu ww;
     ww.setModal(true);
     ww.exec();
+
     scoreMovie = new QMovie(":src/img/label_score.gif");
     ui->lblScoreTitle->setMovie(scoreMovie);
     scoreMovie->start();
@@ -128,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent) :
             btn->setIcon(QIcon(":/src/img/ball_"+colors[a]+".png"));
             btn->setIconSize(QSize(60,60));
             btn->setObjectName("btnGame");
-            btn->setStyleSheet("border-radius: 35px;border: 6px solid white;");
+            btn->setStyleSheet("border-radius: 35px; border: 6px solid white;");
             btn->setFixedSize(70,70);
             ui->layNext3->addWidget(btn,0,i);
         }

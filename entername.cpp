@@ -7,15 +7,18 @@
 #include <QPalette>
 #include <QMovie>
 #include <QRegularExpression>
+
 extern int currentScore;
 int flagFrom = 0;
 QString nameG;
 int nameGExists = 0;
+
 EnterName::EnterName(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EnterName)
 {
     ui->setupUi(this);
+    this->setFixedSize(1380, 443);
     QPixmap pix(":src/img/background_entername.jpg");
     pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette pal;

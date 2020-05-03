@@ -21,6 +21,7 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
     ui(new Ui::ScoreBoard)
 {
     ui->setupUi(this);
+    this->setFixedSize(588, 790);
     QPixmap pix(":src/img/background_scoreboard.jpg");
     pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette pal;
@@ -29,7 +30,6 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
 
     QFile file("scoreboard.json");
     file.open(QIODevice::ReadWrite);
-
     QJsonObject obj = QJsonDocument::fromJson(file.readAll()).object();
     QJsonValue jv = obj.value("mainArray");
     if(jv.isArray()){

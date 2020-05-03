@@ -18,15 +18,19 @@ extern int flagFrom;
  QString loadField;
  QString loadn3;
  QString loadScore;
+
 Menu::Menu(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
+    this->setFixedSize(755, 659);
     stGameGlob = 2;
+
     QMovie *m = new QMovie(":src/img/label_main.gif");
     ui->lblName->setMovie(m);
     m->start();
+
     QPixmap pix(":src/img/background_menu.png");
     pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette pal;
@@ -63,7 +67,7 @@ void Menu::on_btnQuit_clicked()
 void Menu::on_btnLoadGame_clicked()
 {
     bool ok;
-    QString ans = QInputDialog::getText(this,"Key","Enter your key: ",QLineEdit::Normal,"",&ok);
+    QString ans = QInputDialog::getText(this, "Key", "Enter your key: ", QLineEdit::Normal, "", &ok);
     if (ok && !ans.isEmpty()){
         QFile file("savedata.json");
         file.open(QIODevice::ReadOnly);
@@ -73,7 +77,7 @@ void Menu::on_btnLoadGame_clicked()
         if (obj.value(ans) != QJsonValue::Undefined){
             stGameGlob = 3;
             loadField = obj.value(ans).toObject().value("field").toString();
-            loadn3 =obj.value(ans).toObject().value("n3").toString();
+            loadn3 = obj.value(ans).toObject().value("n3").toString();
             loadScore = obj.value(ans).toObject().value("score").toString();
             obj.remove(ans);
             file.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
@@ -84,6 +88,7 @@ void Menu::on_btnLoadGame_clicked()
         }
     }
 }
+
 void Menu::closeEvent(QCloseEvent *e){
     e->accept();
 }
