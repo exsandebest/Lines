@@ -2,20 +2,15 @@
 #include "ui_menu.h"
 #include "mainwindow.h"
 #include "scoreboard.h"
-#include <QApplication>
 #include <QPixmap>
 #include <QPalette>
 #include <QMovie>
-#include <QDebug>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFile>
-#include <QTextStream>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QJsonArray>
-#include <QMap>
 #include "settings.h"
 
 int stGameGlob = 2;
@@ -29,13 +24,10 @@ Menu::Menu(QWidget *parent) :
 {
     ui->setupUi(this);
     stGameGlob = 2;
-    QMovie *m = new QMovie(":src/img/title.gif");
-    if (!m->isValid()){
-        qDebug() << "!m->isValid() (title.gif)";
-    }
+    QMovie *m = new QMovie(":src/img/label_main.gif");
     ui->lblName->setMovie(m);
     m->start();
-    QPixmap pix(":src/img/mainBg.png");
+    QPixmap pix(":src/img/background_menu.png");
     pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette pal;
     pal.setBrush(QPalette::Background,pix);

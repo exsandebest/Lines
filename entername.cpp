@@ -1,13 +1,12 @@
 #include "entername.h"
 #include "ui_entername.h"
-#include <QtWidgets>
 #include <QMessageBox>
 #include "scoreboard.h"
 #include <QCloseEvent>
 #include <QPixmap>
 #include <QPalette>
-#include <QBrush>
 #include <QMovie>
+#include <QRegularExpression>
 extern int currentScore;
 int flagFrom = 0;
 QString nameG;
@@ -17,12 +16,12 @@ EnterName::EnterName(QWidget *parent) :
     ui(new Ui::EnterName)
 {
     ui->setupUi(this);
-    QPixmap pix(":src/img/bgName.jpg");
+    QPixmap pix(":src/img/background_entername.jpg");
     pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette pal;
     pal.setBrush(QPalette::Background,pix);
     this->setPalette(pal);
-    QMovie * m = new QMovie(":src/img/GO.gif");
+    QMovie * m = new QMovie(":src/img/label_game_over.gif");
     ui->lblGameOver->setMovie(m);
     m->start();
     m->stop();

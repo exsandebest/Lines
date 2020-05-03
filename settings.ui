@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="src.qrc">
-    <normaloff>:/src/img/iс.ico</normaloff>:/src/img/iс.ico</iconset>
+    <normaloff>:/src/img/icon.ico</normaloff>:/src/img/icon.ico</iconset>
   </property>
   <widget class="QPushButton" name="btnSaveSettings">
    <property name="geometry">
@@ -65,12 +65,12 @@ border: 4px solid rgb(26, 255, 236);
     <string/>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>190</x>
      <y>140</y>
-     <width>256</width>
+     <width>269</width>
      <height>141</height>
     </rect>
    </property>

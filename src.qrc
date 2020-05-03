@@ -1,29 +1,23 @@
 <RCC>
     <qresource prefix="/src">
-        <file>img/blue.png</file>
-        <file>img/green.png</file>
-        <file>img/orange.png</file>
-        <file>img/purple.png</file>
-        <file>img/red.png</file>
-        <file>img/GO.png</file>
-        <file>img/title.gif</file>
-        <file>img/mainBg.png</file>
-        <file>img/score.gif</file>
-        <file>img/orig.gif</file>
-        <file>img/bg.jpg</file>
-        <file>img/n3.png</file>
-        <file>img/bgName.jpg</file>
-        <file>img/GO.gif</file>
-        <file>img/iс.ico</file>
-        <file>img/bgSettings.png</file>
-        <file>img/ngears.jpg</file>
-        <file>img/bgSettings2.jpg</file>
-        <file>img/titleSettings.png</file>
-        <file>img/scoreboard.jpg</file>
-        <file>img/bgSc3.jpg</file>
+        <file>img/ball_blue.png</file>
+        <file>img/ball_green.png</file>
+        <file>img/ball_orange.png</file>
+        <file>img/ball_purple.png</file>
+        <file>img/ball_red.png</file>
+        <file>img/label_main.gif</file>
+        <file>img/background_menu.png</file>
+        <file>img/label_score.gif</file>
+        <file>img/background_main.jpg</file>
+        <file>img/label_next_3_balls.png</file>
+        <file>img/background_entername.jpg</file>
+        <file>img/label_game_over.gif</file>
+        <file>img/icon.ico</file>
+        <file>img/background_settings.jpg</file>
+        <file>img/label_settings.png</file>
+        <file>img/background_scoreboard.jpg</file>
     </qresource>
     <qresource prefix="/qss">
         <file>style.css</file>
-        <file>style2.css</file>
     </qresource>
 </RCC>
