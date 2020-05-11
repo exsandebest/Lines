@@ -31,7 +31,8 @@ const int cost = 20;
 QMovie * scoreMovie;
 int currentScore;
 int next3[3];
-int field[9][9];
+QPushButton * field[9][9];
+int fieldNum[9][9];
 int active[3] = {-1};
 int path[9][9];
 
@@ -40,9 +41,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    Menu ww;
-    ww.setModal(true);
-    ww.exec();
+    Menu menuWindow;
+    menuWindow.setModal(true);
+    menuWindow.exec();
 
     scoreMovie = new QMovie(":src/img/label_score.gif");
     ui->lblScoreTitle->setMovie(scoreMovie);
@@ -168,9 +169,7 @@ void MainWindow::btnGameClicked(){
                         x2 = x1;
                         y2 = y1-1;
                     }
-                    QWidget * wid = ui->layGame->itemAtPosition(x1,y1)->widget();
-                    QPushButton  * btnAnim = dynamic_cast<QPushButton*>(wid);
-                    QPropertyAnimation * animation = new QPropertyAnimation(btnAnim,"iconSize");
+                    QPropertyAnimation * animation = new QPropertyAnimation(ui->layGame->itemAtPosition(x1,y1)->widget(),"iconSize");
                     animation->setDuration(ANIMATIONDURATION);
                     animation->setStartValue(QSize(90,90));
                     animation->setEndValue(QSize(0,0));
@@ -215,9 +214,7 @@ void MainWindow::btnGameClicked(){
                 }
 
             } else {
-                QWidget * wid = ui->layGame->itemAtPosition(x1,y1)->widget();
-                QPushButton  * btnAnim = dynamic_cast<QPushButton*>(wid);
-                QPropertyAnimation * animation = new QPropertyAnimation(btnAnim,"iconSize");
+                QPropertyAnimation * animation = new QPropertyAnimation(ui->layGame->itemAtPosition(x1,y1)->widget(),"iconSize");
                 animation->setDuration(ANIMATIONDURATION);
                 animation->setStartValue(QSize(90,90));
                 animation->setEndValue(QSize(0,0));
@@ -312,8 +309,7 @@ void MainWindow::set3balls(){
         int x = qrand()%9;
         int y = qrand()%9;
         int c = next3[k];
-        QWidget * wid = ui->layGame->itemAtPosition(x,y)->widget();
-        QPushButton  * btn = dynamic_cast<QPushButton*>(wid);
+        QPushButton  * btn = dynamic_cast<QPushButton*>(ui->layGame->itemAtPosition(x,y)->widget());
         int colorId  = btn->property("colorId").toInt();
         if (colorId == -1){
             btn->setProperty("colorId", c);
@@ -363,19 +359,19 @@ void MainWindow::checkCollapse(int end){
     }
 
     for(int i = 0; i < 9; ++i){
-        int c = field[i][0];
+        int c = fieldNum[i][0];
         int l = 1;
         int fl = 0;
         for(int j = 1; j < 9; ++j){
-            if (field[i][j] == -1){
+            if (fieldNum[i][j] == -1){
                 l = 1;
                 fl = 0;
                 c = -2;
                 continue;
             }
-            if (field[i][j] != c){
+            if (fieldNum[i][j] != c){
                 l = 1;
-                c = field[i][j];
+                c = fieldNum[i][j];
                 fl = 0;
             } else {
                 ++l;
@@ -395,19 +391,19 @@ void MainWindow::checkCollapse(int end){
 
 
     for(int i = 0; i < 9; ++i){
-        int c = field[0][i];
+        int c = fieldNum[0][i];
         int l = 1;
         int fl = 0;
         for(int j = 1; j < 9; ++j){
-            if (field[j][i] == -1){
+            if (fieldNum[j][i] == -1){
                 l = 1;
                 fl = 0;
                 c = -2;
                 continue;
             }
-            if (field[j][i] != c){
+            if (fieldNum[j][i] != c){
                 l = 1;
-                c = field[j][i];
+                c = fieldNum[j][i];
                 fl = 0;
             } else {
                 ++l;
@@ -432,19 +428,19 @@ void MainWindow::checkCollapse(int end){
         for (int i =0; i < 9; ++i){
             for (int j = 0; j <9; ++j){
                 if (arr[i][j] == 1){
-                    if (i+1<9 && arr[i+1][j] == 0 && field[i+1][j] == field[i][j]){
+                    if (i+1<9 && arr[i+1][j] == 0 && fieldNum[i+1][j] == fieldNum[i][j]){
                         arr[i+1][j] = 1;
                         changes = 1;
                     }
-                    if (i-1>=0 && arr[i-1][j] == 0 && field[i-1][j] == field[i][j]){
+                    if (i-1>=0 && arr[i-1][j] == 0 && fieldNum[i-1][j] == fieldNum[i][j]){
                         arr[i-1][j] = 1;
                         changes = 1;
                     }
-                    if (j+1<9 && arr[i][j+1] == 0 && field[i][j+1] == field[i][j]){
+                    if (j+1<9 && arr[i][j+1] == 0 && fieldNum[i][j+1] == fieldNum[i][j]){
                         arr[i][j+1] = 1;
                         changes =1;
                     }
-                    if (j-1>=0 && arr[i][j-1] == 0 && field[i][j-1] == field[i][j]){
+                    if (j-1>=0 && arr[i][j-1] == 0 && fieldNum[i][j-1] == fieldNum[i][j]){
                         arr[i][j-1] = 1;
                         changes =1;
                     }
@@ -498,10 +494,8 @@ void MainWindow::collapse(int arr[9][9]){
     updateField();
     ans+=ui->lblScore->text().toInt();
     currentScore = ans;
-    QString s2;
-    s2.setNum(ans);
     scoreMovie->start();
-    ui->lblScore->setText(s2);
+    ui->lblScore->setText(QString::number(ans));
 }
 
 
@@ -510,9 +504,7 @@ void MainWindow::collapse(int arr[9][9]){
 void MainWindow::updateField(){
     for (int i = 0; i < 9; ++i){
         for (int j = 0; j < 9; ++j){
-            QWidget * wid = ui->layGame->itemAtPosition(i,j)->widget();
-            QPushButton  * btn = dynamic_cast<QPushButton*>(wid);
-            field[i][j] = btn->property("colorId").toString().toInt();
+            fieldNum[i][j] = ui->layGame->itemAtPosition(i,j)->widget()->property("colorId").toInt();
         }
     }
 }
@@ -527,7 +519,7 @@ void MainWindow::gameRestart(){
     }
     for (int i = 0; i < 9; ++i){
         for (int j = 0; j < 9; ++j){
-            field[i][j] =-1;
+            fieldNum[i][j] =-1;
             delete ui->layGame->itemAtPosition(i,j)->widget();
             QPushButton * btn = new QPushButton();
             btn->setFixedSize(100,100);
@@ -546,9 +538,7 @@ void MainWindow::gameRestart(){
 bool MainWindow::checkGameEnd(){
     for (int i =0; i <9; ++i){
         for (int j = 0; j<9; ++j){
-            QWidget * wid = ui->layGame->itemAtPosition(i,j)->widget();
-            QPushButton  * btn = dynamic_cast<QPushButton*>(wid);
-            if (btn->property("colorId").toInt() == -1){
+            if (ui->layGame->itemAtPosition(i,j)->widget()->property("colorId").toInt() == -1){
                 return 0;
             }
         }
@@ -574,7 +564,7 @@ bool MainWindow::checkAccess(int x1, int y1, int x2, int y2){
         int arr[9][9];
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j){
-                if (field[i][j] != -1){
+                if (fieldNum[i][j] != -1){
                     arr[i][j] = -1;
                 } else {
                     arr[i][j] = -2;
@@ -640,28 +630,28 @@ bool MainWindow::checkAccess(int x1, int y1, int x2, int y2){
             }
         }
         for (int i = x1+1; i <9; ++i){
-            if (field[i][y1] == -1){
+            if (fieldNum[i][y1] == -1){
                 arr[i][y1] = 1;
             } else {
                 break;
             }
         }
         for (int i = x1-1; i>=0; --i){
-            if (field[i][y1] == -1){
+            if (fieldNum[i][y1] == -1){
                 arr[i][y1] = 1;
             } else {
                 break;
             }
         }
         for (int j = y1+1; j<9; ++j){
-            if (field[x1][j] == -1){
+            if (fieldNum[x1][j] == -1){
                 arr[x1][j] = 1;
             } else {
                 break;
             }
         }
         for (int j = y1-1; j >=0; --j){
-            if (field[x1][j] == -1){
+            if (fieldNum[x1][j] == -1){
                 arr[x1][j] = 1;
             } else {
                 break;
@@ -717,8 +707,8 @@ void MainWindow::on_btnSaveGame_clicked() {
     for (int i = 0; i < 9; ++i){
         for (int j = 0; j < 9; ++j){
             QString s1;
-            s1.setNum(field[i][j]);
-            if (field[i][j] == -1){
+            s1.setNum(fieldNum[i][j]);
+            if (fieldNum[i][j] == -1){
                 s1 = "9";
             }
             f+=s1;
