@@ -66,19 +66,15 @@ MainWindow::MainWindow(QWidget *parent) :
     if (stGameGlob == 2){
         exit(0);
     } else if (stGameGlob == 1){
-        QString s1,s2;
         for (int i =0; i < 3; ++i){
             next3[i] = qrand()%5;
         }
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j){
-                s1.setNum(i);
-                s2.setNum(j);
                 QPushButton * btn = new QPushButton();
                 btn->setFlat(true);
                 btn->setMaximumSize(QSize(100,100));
-                btn->setProperty("id",s1+":"+s2);
-                btn->setProperty("color","no");
+                btn->setProperty("coords", QPoint(i,j));
                 btn->setProperty("colorId",-1);
                 btn->setObjectName("btnGame");
                 btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
@@ -99,17 +95,12 @@ MainWindow::MainWindow(QWidget *parent) :
                 if (a == 9){
                     a = -1;
                 }
-                QString s1,s2;
-                s1.setNum(i);
-                s2.setNum(j);
                 QPushButton * btn = new QPushButton();
                 btn->setMaximumSize(QSize(100,100));
-                btn->setProperty("id",s1+":"+s2);
+                btn->setProperty("coords", QPoint(i,j));
                 if (a == -1){
-                    btn->setProperty("color","no");
                     btn->setProperty("colorId",-1);
                 } else {
-                    btn->setProperty("color",colors[a]);
                     btn->setProperty("colorId",a);
                     btn->setIcon(QIcon(":/src/img/ball_"+colors[a]+".png"));
                     btn->setIconSize(QSize(90,90));
@@ -140,14 +131,28 @@ MainWindow::~MainWindow(){
 }
 
 
+void MainWindow::setBall(QPoint p, QString c){
+
+}
+void MainWindow::setEmptyCell(QPoint p){
+
+}
+void MainWindow::setSelectionBorder(QPoint p){
+
+}
+void MainWindow::setOriginalBorder(QPoint p){
+
+}
+
+
 void MainWindow::btnGameClicked(){
     if (active[0] != -1){
         QObject * btn = sender();
-        QStringList list = btn->property("id").toString().split(":");
-        QString color = btn->property("color").toString();
-        int x2 = list[0].toInt(), y2 = list[1].toInt();
+        int colorId = btn->property("colorId").toInt();
+        QPoint coords = btn->property("coords").toPoint();
+        int x2 = coords.x(), y2 = coords.y();
         int x1 = active[0], y1 = active[1];
-        if(color == "no" && checkAccess(x1,y1,x2,y2)){
+        if(colorId == -1 && checkAccess(x1,y1,x2,y2)){
             if (movementG != 0){
                 while (1){
                     if (x1+1<9 && path[x1+1][y1] == path[x1][y1]+1){
@@ -172,13 +177,9 @@ void MainWindow::btnGameClicked(){
                     animation->start();
                     while (animation->state() != QAbstractAnimation::Stopped) QCoreApplication::processEvents();
 
-                    QString s3,s4;
-                    s3.setNum(x1);
-                    s4.setNum(y1);
                     delete ui->layGame->itemAtPosition(x1,y1)->widget();
                     QPushButton * btn2 = new QPushButton();
-                    btn2->setProperty("id",s3+":"+s4);
-                    btn2->setProperty("color","no");
+                    btn2->setProperty("coords", QPoint(x1, y1));
                     btn2->setProperty("colorId",-1);
                     btn2->setFixedSize(100,100);
                     btn2->setObjectName("btnGame");
@@ -191,11 +192,7 @@ void MainWindow::btnGameClicked(){
                     QPushButton * btn = new QPushButton();
                     btn->setIcon(QIcon(":/src/img/ball_"+colors[active[2]]+".png"));
                     btn->setIconSize(QSize(90,90));
-                    QString s1,s2;
-                    s1.setNum(x2);
-                    s2.setNum(y2);
-                    btn->setProperty("id",s1+":"+s2);
-                    btn->setProperty("color",colors[active[2]]);
+                    btn->setProperty("coords", QPoint(x2,y2));
                     btn->setProperty("colorId",active[2]);
                     btn->setFixedSize(100,100);
                     btn->setObjectName("btnGame");
@@ -210,7 +207,7 @@ void MainWindow::btnGameClicked(){
                     animation2->start();
                     while (animation2->state() != QAbstractAnimation::Stopped) QCoreApplication::processEvents();
 
-                    if (x2 == list[0].toInt() && y2 == list[1].toInt()){
+                    if (x2 == coords.x() && y2 == coords.y()){
                         break;
                     }
                     y1 = y2;
@@ -227,13 +224,9 @@ void MainWindow::btnGameClicked(){
                 animation->start();
                 while (animation->state() != QAbstractAnimation::Stopped) QCoreApplication::processEvents();
 
-                QString s3,s4;
-                s3.setNum(x1);
-                s4.setNum(y1);
                 delete ui->layGame->itemAtPosition(x1,y1)->widget();
                 QPushButton * btn2 = new QPushButton();
-                btn2->setProperty("id",s3+":"+s4);
-                btn2->setProperty("color","no");
+                btn2->setProperty("coords", QPoint(x1, y1));
                 btn2->setProperty("colorId",-1);
                 btn2->setFixedSize(100,100);
                 btn2->setObjectName("btnGame");
@@ -246,11 +239,7 @@ void MainWindow::btnGameClicked(){
                 QPushButton * btn = new QPushButton();
                 btn->setIcon(QIcon(":/src/img/ball_"+colors[active[2]]+".png"));
                 btn->setIconSize(QSize(90,90));
-                QString s1,s2;
-                s1.setNum(x2);
-                s2.setNum(y2);
-                btn->setProperty("id",s1+":"+s2);
-                btn->setProperty("color",colors[active[2]]);
+                btn->setProperty("coords", QPoint(x2, y2));
                 btn->setProperty("colorId",active[2]);
                 btn->setFixedSize(100,100);
                 btn->setObjectName("btnGame");
@@ -280,12 +269,8 @@ void MainWindow::btnGameClicked(){
         } else {
             delete ui->layGame->itemAtPosition(active[0],active[1])->widget();
             QPushButton * btn3 = new QPushButton();
-            QString s1,s2;
-            s1.setNum(active[0]);
-            s2.setNum(active[1]);
-            btn3->setProperty("id",s1+":"+s2);
-            btn3->setProperty("color",colors[active[2]]);
-            btn3->setProperty("colorId",active[2]);
+            btn3->setProperty("coords", QPoint(active[0], active[1]));
+            btn3->setProperty("colorId", active[2]);
             btn3->setFixedSize(100,100);
             btn3->setObjectName("btnGame");
             btn3->setIcon(QIcon(":/src/img/ball_"+colors[active[2]]+".png"));
@@ -299,15 +284,14 @@ void MainWindow::btnGameClicked(){
         }
     } else {
         QObject * btn = sender();
-        QStringList list = btn->property("id").toString().split(":");
-        if (btn->property("color").toString() != "no"){
-            active[0] = list[0].toInt();
-            active[1] = list[1].toInt();
-            active[2] = btn->property("colorId").toString().toInt();
+        QPoint coords = btn->property("coords").toPoint();
+        if (btn->property("colorId").toInt() != -1){
+            active[0] = coords.x();
+            active[1] = coords.y();
+            active[2] = btn->property("colorId").toInt();
             delete ui->layGame->itemAtPosition(active[0],active[1])->widget();
             QPushButton * btn2 = new QPushButton();
-            btn2->setProperty("id",list[0]+":"+list[1]);
-            btn2->setProperty("color",colors[active[2]]);
+            btn2->setProperty("coords", coords);
             btn2->setProperty("colorId",active[2]);
             btn2->setFixedSize(100,100);
             btn2->setObjectName("btnGame");
@@ -330,9 +314,8 @@ void MainWindow::set3balls(){
         int c = next3[k];
         QWidget * wid = ui->layGame->itemAtPosition(x,y)->widget();
         QPushButton  * btn = dynamic_cast<QPushButton*>(wid);
-        QString color  = btn->property("color").toString();
-        if (color == "no"){
-            btn->setProperty("color", colors[c]);
+        int colorId  = btn->property("colorId").toInt();
+        if (colorId == -1){
             btn->setProperty("colorId", c);
             btn->setIcon(QIcon(":/src/img/ball_"+colors[c]+".png"));
             btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
@@ -496,13 +479,9 @@ void MainWindow::collapse(int arr[9][9]){
         for (int j = 0; j <9; ++j){
             if (arr[i][j] == 1){
                 delete ui->layGame->itemAtPosition(i,j)->widget();
-                QString s1,s2;
-                s1.setNum(i);
-                s2.setNum(j);
                 QPushButton * btn = new QPushButton();
                 btn->setFixedSize(100,100);
-                btn->setProperty("id",s1+":"+s2);
-                btn->setProperty("color","no");
+                btn->setProperty("coords", QPoint(i, j));
                 btn->setProperty("colorId",-1);
                 btn->setObjectName("btnGame");
                 btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
@@ -550,14 +529,9 @@ void MainWindow::gameRestart(){
         for (int j = 0; j < 9; ++j){
             field[i][j] =-1;
             delete ui->layGame->itemAtPosition(i,j)->widget();
-            QString s1,s2;
-
-            s1.setNum(i);
-            s2.setNum(j);
             QPushButton * btn = new QPushButton();
             btn->setFixedSize(100,100);
-            btn->setProperty("id",s1+":"+s2);
-            btn->setProperty("color","no");
+            btn->setProperty("coords", QPoint(i, j));
             btn->setProperty("colorId",-1);
             btn->setObjectName("btnGame");
             btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
@@ -574,7 +548,7 @@ bool MainWindow::checkGameEnd(){
         for (int j = 0; j<9; ++j){
             QWidget * wid = ui->layGame->itemAtPosition(i,j)->widget();
             QPushButton  * btn = dynamic_cast<QPushButton*>(wid);
-            if (btn->property("color").toString() == "no"){
+            if (btn->property("colorId").toInt() == -1){
                 return 0;
             }
         }

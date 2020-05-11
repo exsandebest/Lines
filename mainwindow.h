@@ -23,6 +23,10 @@ public:
     void checkCollapse(int end);
     void gameRestart();
     bool checkAccess(int x1, int y1, int x2, int y2);
+    void setBall(QPoint, QString);
+    void setEmptyCell(QPoint);
+    void setSelectionBorder(QPoint);
+    void setOriginalBorder(QPoint);
 
 
 private:
