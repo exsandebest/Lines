@@ -16,5 +16,6 @@
         <file>img/background_settings.jpg</file>
         <file>img/label_settings.png</file>
         <file>img/background_scoreboard.jpg</file>
+        <file>img/ball_empty.png</file>
     </qresource>
 </RCC>

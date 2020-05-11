@@ -27,6 +27,7 @@ extern int movementG;
 const int ANIMATIONDURATION = 100;
 const QString colors[] = {"blue","green","red","purple","orange"};
 const int cost = 20;
+int iconSize = 60;
 
 QMovie * scoreMovie;
 int currentScore;
@@ -78,9 +79,10 @@ MainWindow::MainWindow(QWidget *parent) :
                 btn->setProperty("coords", QPoint(i,j));
                 btn->setProperty("colorId",-1);
                 btn->setObjectName("btnGame");
-                btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
                 QObject :: connect(btn,SIGNAL(clicked()),this,SLOT(btnGameClicked()));
                 ui->layGame->addWidget(btn, i,j);
+                field[i][j] = btn;
+                setOriginalBorder(QPoint(i,j));
             }
         }
         ui->lblScore->setText("0");
@@ -132,17 +134,20 @@ MainWindow::~MainWindow(){
 }
 
 
-void MainWindow::setBall(QPoint p, QString c){
-
-}
-void MainWindow::setEmptyCell(QPoint p){
-
+void MainWindow::setBall(QPoint p, int c){
+    field[p.x()][p.y()]->setProperty("colorId", c);
+    field[p.x()][p.y()]->setIconSize(QSize(60, 60));
+    if (c == -1){
+        field[p.x()][p.y()]->setIcon(QIcon(":/src/img/ball_null.png"));
+    } else {
+        field[p.x()][p.y()]->setIcon(QIcon(":/src/img/ball_"+colors[c]+".png"));
+    }
 }
 void MainWindow::setSelectionBorder(QPoint p){
-
+    field[p.x()][p.y()]->setStyleSheet("border-radius: 50px;border: 6px solid #00FA9A;");
 }
 void MainWindow::setOriginalBorder(QPoint p){
-
+    field[p.x()][p.y()]->setStyleSheet("border-radius: 50px;border: 6px solid white;");
 }
 
 
