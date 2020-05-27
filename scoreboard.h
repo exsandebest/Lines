@@ -18,8 +18,10 @@ public:
 
 private slots:
     void on_btnOk_clicked();
+
 protected:
     void closeEvent(QCloseEvent * e);
+
 private:
     Ui::ScoreBoard *ui;
 };

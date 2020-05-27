@@ -17,10 +17,11 @@ public:
 
 private slots:
     void on_btnSaveName_clicked();
-
     void on_btnDontSave_clicked();
+
 protected:
     void closeEvent(QCloseEvent * e);
+
 private:
     Ui::EnterName *ui;
 };

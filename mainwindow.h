@@ -27,9 +27,9 @@ public:
     void setSelectionBorder(QPoint);
     void setOriginalBorder(QPoint);
 
-
 private:
     Ui::MainWindow *ui;
+
 protected:
     void closeEvent(QCloseEvent *e);
 

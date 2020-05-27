@@ -9,6 +9,11 @@ enum {
     // MT - Movement Type
     MTTeleport = 0,
     MTStandard = 1,
-    MTHandV = 2
+    MTHandV = 2,
+
+    //SS - Selection State
+    SSNone = 0,
+    SSSelected = 1,
+    SSBlocked = -1
 };
 #endif // ENUMS_H

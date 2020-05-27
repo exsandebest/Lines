@@ -25,15 +25,16 @@ extern int MovementType;
 extern QMap <QString, QString> loaded;
 
 
-const int ANIMATIONDURATION = 100;
+const int AnimationDuration = 100;
 const QString colors[] = {"blue","green","red","purple","orange"};
 const int cost = 20;
-const int iconSize = 60;
+const int sizeOfIcon = 90;
 
 QMovie * scoreMovie;
 QPushButton * field[9][9];
+QPushButton * next3[3] = {nullptr};
+int selectionState = 0;
 int currentScore;
-int next3[3];
 int fieldNum[9][9];
 int active[3] = {-1};
 int path[9][9];
@@ -69,14 +70,29 @@ MainWindow::MainWindow(QWidget *parent) :
     if (GameState == GSExit){
         exit(0);
     } else if (GameState == GSStartNewGame){
-        for (int i =0; i < 3; ++i){
-            next3[i] = qrand()%5;
+        if (next3[0] == nullptr){
+            for (int i = 0; i < 3; ++i){
+                QPushButton * btn = new QPushButton();
+                btn->setProperty("colorId", qrand()%5);
+                btn->setIconSize(QSize(60, 60));
+                btn->setIcon(QIcon(":/src/img/ball_"+colors[btn->property("colorId").toInt()]+".png"));
+                btn->setStyleSheet("border-radius: 35px;border: 6px solid white;");
+                btn->setFixedSize(70,70);
+                next3[i] = btn;
+                ui->layNext3->addWidget(btn, 0, i);
+            }
+        } else {
+            for (int i = 0; i < 3; ++i){
+                next3[i]->setProperty("colorId", qrand()%5);
+                next3[i]->setIcon(QIcon(":/src/img/ball_"+colors[next3[i]->property("colorId").toInt()]+".png"));
+            }
         }
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j){
                 QPushButton * btn = new QPushButton();
                 btn->setFlat(true);
                 btn->setMaximumSize(QSize(100,100));
+                btn->setIconSize(QSize(sizeOfIcon, sizeOfIcon));
                 btn->setProperty("coords", QPoint(i,j));
                 btn->setProperty("colorId",-1);
                 btn->setObjectName("btnGame");
@@ -173,7 +189,7 @@ void MainWindow::btnGameClicked(){
                         y2 = y1-1;
                     }
                     QPropertyAnimation * animation = new QPropertyAnimation(ui->layGame->itemAtPosition(x1,y1)->widget(),"iconSize");
-                    animation->setDuration(ANIMATIONDURATION);
+                    animation->setDuration(AnimationDuration);
                     animation->setStartValue(QSize(90,90));
                     animation->setEndValue(QSize(0,0));
                     animation->start();
@@ -202,7 +218,7 @@ void MainWindow::btnGameClicked(){
                     QObject :: connect(btn,SIGNAL(clicked()),this,SLOT(btnGameClicked()));
 
                     QPropertyAnimation * animation2 = new QPropertyAnimation(btn,"iconSize");
-                    animation2->setDuration(ANIMATIONDURATION);
+                    animation2->setDuration(AnimationDuration);
                     animation2->setStartValue(QSize(0,0));
                     animation2->setEndValue(QSize(90,90));
                     ui->layGame->addWidget(btn,x2,y2);
@@ -217,7 +233,7 @@ void MainWindow::btnGameClicked(){
                 }
             } else {
                 QPropertyAnimation * animation = new QPropertyAnimation(ui->layGame->itemAtPosition(x1,y1)->widget(),"iconSize");
-                animation->setDuration(ANIMATIONDURATION);
+                animation->setDuration(AnimationDuration);
                 animation->setStartValue(QSize(90,90));
                 animation->setEndValue(QSize(0,0));
                 animation->start();
@@ -246,7 +262,7 @@ void MainWindow::btnGameClicked(){
                 QObject :: connect(btn,SIGNAL(clicked()),this,SLOT(btnGameClicked()));
 
                 QPropertyAnimation * animation2 = new QPropertyAnimation(btn,"iconSize");
-                animation2->setDuration(ANIMATIONDURATION);
+                animation2->setDuration(AnimationDuration);
                 animation2->setStartValue(QSize(0,0));
                 animation2->setEndValue(QSize(90,90));
                 ui->layGame->addWidget(btn,x2,y2);
@@ -310,16 +326,14 @@ void MainWindow::set3balls(){
     while (k<3){
         int x = qrand()%9;
         int y = qrand()%9;
-        int c = next3[k];
-        QPushButton  * btn = dynamic_cast<QPushButton*>(ui->layGame->itemAtPosition(x,y)->widget());
+        int c = next3[k]->property("colorId").toInt();
+        QPushButton  * btn = field[x][y];
         int colorId  = btn->property("colorId").toInt();
         if (colorId == -1){
             btn->setProperty("colorId", c);
             btn->setIcon(QIcon(":/src/img/ball_"+colors[c]+".png"));
-            btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
-            btn->setIconSize(QSize(90,90));
-            ui->layGame->addWidget(btn,x,y);
-            next3[k] = qrand()%5;
+            next3[k]->setProperty("colorId", qrand()%5);
+            next3[k]->setIcon(QIcon(":/src/img/ball_"+colors[next3[k]->property("colorId").toInt()]+".png"));
             ++k;
             if (checkGameEnd()){
                 currentScore = ui->lblScore->text().toInt();
@@ -328,22 +342,6 @@ void MainWindow::set3balls(){
                 w.exec();
             }
         }
-    }
-
-    QLayoutItem* item;
-    while ((item = ui->layNext3->takeAt(0)) != NULL){
-        delete item->widget();
-        delete item;
-    }
-
-    for (int i = 0; i < 3; ++i){
-        QPushButton * btn = new QPushButton();
-        btn->setIcon(QIcon(":/src/img/ball_"+colors[next3[i]]+".png"));
-        btn->setIconSize(QSize(60,60));
-        btn->setObjectName("btnGame");
-        btn->setStyleSheet("border-radius: 35px;border: 6px solid white;");
-        btn->setFixedSize(70,70);
-        ui->layNext3->addWidget(btn,0,i);
     }
     updateField();
 }
@@ -424,7 +422,6 @@ void MainWindow::checkCollapse(int end){
     }
 
     bool changes = 1;
-
     while (changes){
         changes = 0;
         for (int i =0; i < 9; ++i){
@@ -713,9 +710,7 @@ void MainWindow::on_btnSaveGame_clicked() {
     }
     QString n3s = "";
     for (int i = 0; i < 3; ++i){
-        QString s1;
-        s1.setNum(next3[i]);
-        n3s+=s1;
+        n3s += next3[i]->property("colorId").toString();
     }
 
     QJsonObject g;
