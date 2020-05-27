@@ -20,12 +20,13 @@ public:
     bool checkGameEnd();
     void updateField();
     void collapse(int arr[9][9]);
-    void checkCollapse(int end);
+    void checkCollapse();
     void gameRestart();
     bool checkAccess(int x1, int y1, int x2, int y2);
     void setBall(QPoint, int);
     void setSelectionBorder(QPoint);
     void setOriginalBorder(QPoint);
+    QVector<QVector<int>> fieldToNum();
 
 private:
     Ui::MainWindow *ui;
