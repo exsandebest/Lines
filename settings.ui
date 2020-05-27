@@ -93,7 +93,7 @@ border: 4px solid rgb(26, 255, 236);
      </widget>
     </item>
     <item>
-     <widget class="QRadioButton" name="rbtnStandart">
+     <widget class="QRadioButton" name="rbtnStandard">
       <property name="font">
        <font>
         <family>ELEGANCE</family>
@@ -104,7 +104,7 @@ border: 4px solid rgb(26, 255, 236);
        <string notr="true">color:rgb(37, 204, 255)</string>
       </property>
       <property name="text">
-       <string>Standart movement</string>
+       <string>Standard movement</string>
       </property>
      </widget>
     </item>

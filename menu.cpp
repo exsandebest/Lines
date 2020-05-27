@@ -12,12 +12,11 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include "settings.h"
+#include "Enums.h"
 
-int stGameGlob = 2;
+int GameState = GSExit;
 extern int flagFrom;
- QString loadField;
- QString loadn3;
- QString loadScore;
+QMap <QString, QString> loaded;
 
 Menu::Menu(QWidget *parent) :
     QDialog(parent),
@@ -25,7 +24,7 @@ Menu::Menu(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setFixedSize(755, 659);
-    stGameGlob = 2;
+    GameState = GSExit;
 
     QMovie *m = new QMovie(":src/img/label_main.gif");
     ui->lblName->setMovie(m);
@@ -46,7 +45,7 @@ Menu::~Menu()
 
 void Menu::on_btnStartGame_clicked()
 {
-    stGameGlob = 1;
+    GameState = GSStartNewGame;
     this->close();
 }
 
@@ -59,7 +58,7 @@ void Menu::on_btnScoreboard_clicked()
 
 void Menu::on_btnQuit_clicked()
 {
-    stGameGlob = 2;
+    GameState = GSExit;
     this->close();
 }
 
@@ -75,10 +74,10 @@ void Menu::on_btnLoadGame_clicked()
         file.close();
         file.open(QIODevice::WriteOnly);
         if (obj.value(ans) != QJsonValue::Undefined){
-            stGameGlob = 3;
-            loadField = obj.value(ans).toObject().value("field").toString();
-            loadn3 = obj.value(ans).toObject().value("n3").toString();
-            loadScore = obj.value(ans).toObject().value("score").toString();
+            GameState = 3;
+            loaded["field"] = obj.value(ans).toObject().value("field").toString();
+            loaded["next3balls"] = obj.value(ans).toObject().value("n3").toString();
+            loaded["score"] = obj.value(ans).toObject().value("score").toString();
             obj.remove(ans);
             file.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
             file.close();

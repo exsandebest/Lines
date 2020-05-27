@@ -32,6 +32,7 @@ SOURCES += \
     settings.cpp
 
 HEADERS += \
+    Enums.h \
         mainwindow.h \
     menu.h \
     scoreboard.h \

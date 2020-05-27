@@ -2,7 +2,9 @@
 #include "ui_settings.h"
 #include <QPixmap>
 #include <QPalette>
-int movementG = 1;
+#include "Enums.h"
+
+int MovementType = MTStandard;
 
 Settings::Settings(QWidget *parent) :
     QDialog(parent),
@@ -19,11 +21,11 @@ Settings::Settings(QWidget *parent) :
     QPalette pal;
     pal.setBrush(QPalette::Background,pix);
     this->setPalette(pal);
-    if (movementG == 0){
+    if (MovementType == MTTeleport){
         ui->rbtnTeleport->setChecked(true);
-    } else if (movementG == 1){
-        ui->rbtnStandart->setChecked(true);
-    } else if (movementG == 2){
+    } else if (MovementType == MTStandard){
+        ui->rbtnStandard->setChecked(true);
+    } else if (MovementType == MTHandV){
         ui->rbtnHV->setChecked(true);
     }
 }
@@ -36,11 +38,11 @@ Settings::~Settings()
 void Settings::on_btnSaveSettings_clicked()
 {
     if (ui->rbtnTeleport->isChecked()) {
-        movementG = 0;
-    } else if (ui->rbtnStandart->isChecked()){
-        movementG = 1;
+        MovementType = MTTeleport;
+    } else if (ui->rbtnStandard->isChecked()){
+        MovementType = MTStandard;
     } else if (ui->rbtnHV->isChecked()){
-        movementG = 2;
+        MovementType = MTHandV;
     }
     this->close();
 }

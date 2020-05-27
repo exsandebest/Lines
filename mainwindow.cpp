@@ -17,22 +17,23 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QPropertyAnimation>
+#include <QMap>
+#include "Enums.h"
 
-extern int stGameGlob;
-extern QString loadField;
-extern QString loadn3;
-extern QString loadScore;
-extern int movementG;
+extern int GameState;
+extern int MovementType;
+extern QMap <QString, QString> loaded;
+
 
 const int ANIMATIONDURATION = 100;
 const QString colors[] = {"blue","green","red","purple","orange"};
 const int cost = 20;
-int iconSize = 60;
+const int iconSize = 60;
 
 QMovie * scoreMovie;
+QPushButton * field[9][9];
 int currentScore;
 int next3[3];
-QPushButton * field[9][9];
 int fieldNum[9][9];
 int active[3] = {-1};
 int path[9][9];
@@ -65,9 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qsrand(QTime::currentTime().msecsSinceStartOfDay());
 
-    if (stGameGlob == 2){
+    if (GameState == GSExit){
         exit(0);
-    } else if (stGameGlob == 1){
+    } else if (GameState == GSStartNewGame){
         for (int i =0; i < 3; ++i){
             next3[i] = qrand()%5;
         }
@@ -87,21 +88,18 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         ui->lblScore->setText("0");
         set3balls();
-    } else if (stGameGlob == 3){
-        currentScore = loadScore.toInt();
-        ui->lblScore->setText(loadScore);
-        QString str = loadField;
+    } else if (GameState == GSLoadGame){
+        currentScore = loaded["score"].toInt();
+        ui->lblScore->setText(loaded["score"]);
+        QString str = loaded["field"];
         int k = 0;
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j){
                 int a = str.mid(k,1).toInt();
-                if (a == 9){
-                    a = -1;
-                }
                 QPushButton * btn = new QPushButton();
                 btn->setMaximumSize(QSize(100,100));
                 btn->setProperty("coords", QPoint(i,j));
-                if (a == -1){
+                if (a == 9){
                     btn->setProperty("colorId",-1);
                 } else {
                     btn->setProperty("colorId",a);
@@ -111,11 +109,12 @@ MainWindow::MainWindow(QWidget *parent) :
                 btn->setObjectName("btnGame");
                 btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
                 QObject :: connect(btn,SIGNAL(clicked()),this,SLOT(btnGameClicked()));
+                field[i][j] = btn;
                 ui->layGame->addWidget(btn, i,j);
                 ++k;
             }
         }
-        str = loadn3;
+        str = loaded["next3balls"];
         for (int i = 0; i < 3; ++i){
             int a = str.mid(i,1).toInt();
             QPushButton * btn = new QPushButton();
@@ -136,7 +135,6 @@ MainWindow::~MainWindow(){
 
 void MainWindow::setBall(QPoint p, int c){
     field[p.x()][p.y()]->setProperty("colorId", c);
-    field[p.x()][p.y()]->setIconSize(QSize(60, 60));
     if (c == -1){
         field[p.x()][p.y()]->setIcon(QIcon(":/src/img/ball_null.png"));
     } else {
@@ -159,7 +157,7 @@ void MainWindow::btnGameClicked(){
         int x2 = coords.x(), y2 = coords.y();
         int x1 = active[0], y1 = active[1];
         if(colorId == -1 && checkAccess(x1,y1,x2,y2)){
-            if (movementG != 0){
+            if (MovementType != MTTeleport){
                 while (1){
                     if (x1+1<9 && path[x1+1][y1] == path[x1][y1]+1){
                         x2 = x1+1;
@@ -217,7 +215,6 @@ void MainWindow::btnGameClicked(){
                     y1 = y2;
                     x1 = x2;
                 }
-
             } else {
                 QPropertyAnimation * animation = new QPropertyAnimation(ui->layGame->itemAtPosition(x1,y1)->widget(),"iconSize");
                 animation->setDuration(ANIMATIONDURATION);
@@ -467,11 +464,6 @@ void MainWindow::checkCollapse(int end){
 
 
 
-
-
-
-
-
 void MainWindow::collapse(int arr[9][9]){
     int ans = 0;
 
@@ -553,7 +545,7 @@ bool MainWindow::checkGameEnd(){
 
 
 void MainWindow::closeEvent(QCloseEvent *e){
-    if (stGameGlob != 2){
+    if (GameState != GSExit){
         qApp->quit();
         QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
     }
@@ -562,9 +554,9 @@ void MainWindow::closeEvent(QCloseEvent *e){
 
 
 bool MainWindow::checkAccess(int x1, int y1, int x2, int y2){
-    if (movementG == 0){
+    if (MovementType == MTTeleport){
         return true;
-    } else if (movementG == 1) {
+    } else if (MovementType == MTStandard) {
         updateField();
         int arr[9][9];
         for (int i = 0; i < 9; ++i){
@@ -626,7 +618,7 @@ bool MainWindow::checkAccess(int x1, int y1, int x2, int y2){
             return false;
         }
 
-    } else if (movementG == 2){
+    } else if (MovementType == MTHandV){
         updateField();
         int arr[9][9];
         for (int i = 0; i < 9; ++i){
