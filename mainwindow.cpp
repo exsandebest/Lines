@@ -31,12 +31,12 @@ const int sizeOfIcon = 90;
 const int fieldSize = 9;
 
 QMovie * scoreMovie;
-QPushButton * field[fieldSize][fieldSize];
+QPushButton * field[fieldSize][fieldSize] = {{nullptr}};
 QPushButton * next3[3] = {nullptr};
 int selectionState = SSNone;
 QPoint selected;
 int currentScore = 0;
-int path[fieldSize][fieldSize];
+int path[fieldSize][fieldSize] = {{-1}};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -69,22 +69,16 @@ MainWindow::MainWindow(QWidget *parent) :
     if (GameState == GSExit){
         exit(0);
     } else if (GameState == GSStartNewGame){
-        if (next3[0] == nullptr){
-            for (int i = 0; i < 3; ++i){
-                QPushButton * btn = new QPushButton();
-                btn->setProperty("colorId", qrand()%5);
-                btn->setIconSize(QSize(60, 60));
-                btn->setIcon(QIcon(":/src/img/ball_"+colors[btn->property("colorId").toInt()]+".png"));
-                btn->setStyleSheet("border-radius: 35px;border: 6px solid white;");
-                btn->setFixedSize(70,70);
-                next3[i] = btn;
-                ui->layNext3->addWidget(btn, 0, i);
-            }
-        } else {
-            for (int i = 0; i < 3; ++i){
-                next3[i]->setProperty("colorId", qrand()%5);
-                next3[i]->setIcon(QIcon(":/src/img/ball_"+colors[next3[i]->property("colorId").toInt()]+".png"));
-            }
+        for (int i = 0; i < 3; ++i){
+            QPushButton * btn = new QPushButton();
+            btn->setProperty("colorId", qrand()%5);
+            btn->setIconSize(QSize(60, 60));
+            btn->setIcon(QIcon(":/src/img/ball_"+colors[btn->property("colorId").toInt()]+".png"));
+            btn->setStyleSheet("border-radius: 35px;border: 6px solid white;");
+            btn->setFixedSize(70,70);
+            if (next3[i] != nullptr) delete next3[i];
+            next3[i] = btn;
+            ui->layNext3->addWidget(btn, 0, i);
         }
         for (int i = 0; i < fieldSize; ++i){
             for (int j = 0; j < fieldSize; ++j){
@@ -121,9 +115,9 @@ MainWindow::MainWindow(QWidget *parent) :
                     btn->setIcon(QIcon(":/src/img/ball_"+colors[a]+".png"));
                     btn->setIconSize(QSize(sizeOfIcon, sizeOfIcon));
                 }
-                btn->setObjectName("btnGame");
                 btn->setStyleSheet("border-radius: 50px;border: 6px solid white;");
                 QObject :: connect(btn,SIGNAL(clicked()),this,SLOT(btnGameClicked()));
+                if (field[i][j] != nullptr) delete field[i][j];
                 field[i][j] = btn;
                 ui->layGame->addWidget(btn, i,j);
                 ++k;
@@ -138,6 +132,8 @@ MainWindow::MainWindow(QWidget *parent) :
             btn->setObjectName("btnGame");
             btn->setStyleSheet("border-radius: 35px; border: 6px solid white;");
             btn->setFixedSize(70,70);
+            if (next3[i] != nullptr) delete next3[i];
+            next3[i] = btn;
             ui->layNext3->addWidget(btn,0,i);
         }
     }
@@ -521,13 +517,13 @@ bool MainWindow::checkAccess(int x1, int y1, int x2, int y2){
 
 
 void MainWindow::on_btnSaveGame_clicked() {
-    QString mas[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-    QString key = mas[qrand()%25] + mas[(qrand()%25)] + mas[(qrand()%25)];
+    QString dict[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+    QString key = dict[qrand()%25] + dict[(qrand()%25)] + dict[(qrand()%25)];
     QFile file("savedata.json");
     file.open(QFile::ReadWrite);
     QJsonObject obj = QJsonDocument::fromJson(file.readAll()).object();
     while (obj.value(key) != QJsonValue::Undefined){
-        key = mas[qrand()%25] + mas[(qrand()%25)] + mas[(qrand()%25)];
+        key = dict[qrand()%25] + dict[(qrand()%25)] + dict[(qrand()%25)];
     }
 
     QString f = "";
@@ -537,7 +533,7 @@ void MainWindow::on_btnSaveGame_clicked() {
             if (s1 == "-1"){
                 s1 = "9";
             }
-            f+=s1;
+            f += s1;
         }
     }
 
@@ -550,11 +546,12 @@ void MainWindow::on_btnSaveGame_clicked() {
     g["score"] = ui->lblScore->text();
     g["field"] = f;
     g["n3"] = n3s;
+    g["MT"] = MovementType;
     obj[key] = g;
     file.reset();
     file.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
     file.close();
-    QMessageBox::about(this,"Your game key", "Your game key is\n"+key+"\nSave it to recover the game.");
+    QMessageBox::about(this,"Your game key", "Your game key is\n" + key + "\nSave it to recover the game.");
     qApp->quit();
     QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }

@@ -56,9 +56,6 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
     file.reset();
     file.write(QJsonDocument(sArr).toJson(QJsonDocument::Indented));
     file.close();
-
-
-
 }
 
 ScoreBoard::~ScoreBoard()

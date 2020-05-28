@@ -16,6 +16,7 @@
 
 int GameState = GSExit;
 extern int ScoreboardParent;
+extern int MovementType;
 QMap <QString, QString> loaded;
 
 Menu::Menu(QWidget *parent) :
@@ -78,6 +79,7 @@ void Menu::on_btnLoadGame_clicked()
             loaded["field"] = obj.value(ans).toObject().value("field").toString();
             loaded["next3balls"] = obj.value(ans).toObject().value("n3").toString();
             loaded["score"] = obj.value(ans).toObject().value("score").toString();
+            MovementType = obj.value(ans).toObject().value("MT").toInt();
             obj.remove(ans);
             file.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
             file.close();
