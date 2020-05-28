@@ -11,10 +11,12 @@
 #include <QCloseEvent>
 #include <QPixmap>
 #include <QPalette>
-extern QString nameG;
+#include "Enums.h"
+
+extern QString newNickname;
 extern int currentScore;
-extern int flagFrom;
-extern int nameGExists;
+extern int ScoreboardParent;
+extern bool needToSave;
 
 ScoreBoard::ScoreBoard(QWidget *parent) :
     QDialog(parent),
@@ -30,36 +32,31 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
 
     QFile file("scoreboard.json");
     file.open(QIODevice::ReadWrite);
-    QJsonObject obj = QJsonDocument::fromJson(file.readAll()).object();
-    QJsonValue jv = obj.value("mainArray");
-    if(jv.isArray()){
-        QJsonArray ja = jv.toArray();
-        if (flagFrom){
-            if (nameGExists){
-                QJsonObject objNew;
-                objNew["name"] = nameG;
-                QString s1;
-                s1.setNum(currentScore);
-                objNew["score"] = s1;
-                ja.append(objNew);
-            } else {
-                QString s1;
-                s1.setNum(currentScore);
-                ui->lblYourScore->setText("You: "+s1);
-            }
+    QJsonArray ja = QJsonDocument::fromJson(file.readAll()).array();
+    if (ScoreboardParent == SPGame){
+        if (needToSave){
+            QJsonObject objNew;
+            objNew["nickname"] = newNickname;
+            QString s1;
+            s1.setNum(currentScore);
+            objNew["score"] = s1;
+            ja.append(objNew);
+        } else {
+            QString s1;
+            s1.setNum(currentScore);
+            ui->lblYourScore->setText("You: "+s1);
         }
-        QJsonArray sArr = sort(ja);
-
-        for (int i = 0; i < sArr.count(); ++i){
-            ui->lblList->setText(ui->lblList->text() + sArr.at(i).toObject().value("name").toString()+": "+sArr.at(i).toObject().value("score").toString()+"\n");
-        }
-
-        QJsonObject objEnd;
-        objEnd["mainArray"] = sArr;
-        file.reset();
-        file.write(QJsonDocument(objEnd).toJson(QJsonDocument::Indented));
-        file.close();
     }
+    QJsonArray sArr = sort(ja);
+
+    for (int i = 0; i < sArr.count(); ++i){
+        ui->lblList->setText(ui->lblList->text() + sArr.at(i).toObject().value("nickname").toString() + ": " + sArr.at(i).toObject().value("score").toString() + "\n");
+    }
+
+    file.reset();
+    file.write(QJsonDocument(sArr).toJson(QJsonDocument::Indented));
+    file.close();
+
 
 
 }
@@ -68,13 +65,14 @@ ScoreBoard::~ScoreBoard()
 {
     delete ui;
 }
+
 QJsonArray ScoreBoard::sort(QJsonArray arr){
     int len = arr.count();
     int scores[len];
     QMap <int, QString> map;
     for (int i = 0; i < len; ++i){
         QJsonObject obj = arr.at(i).toObject();
-        map[obj.value("score").toString().toInt()] = obj.value("name").toString();
+        map[obj.value("score").toString().toInt()] = obj.value("nickname").toString();
         scores[i] = obj.value("score").toString().toInt();
     }
     std::sort(scores, scores+len);
@@ -84,7 +82,7 @@ QJsonArray ScoreBoard::sort(QJsonArray arr){
     for (int i = len-1; i >=0; --i){
         s.setNum(scores[i]);
         obj["score"] = s;
-        obj["name"] = map[scores[i]];
+        obj["nickname"] = map[scores[i]];
         ans.append(obj);
     }
     return ans;
@@ -94,9 +92,10 @@ void ScoreBoard::on_btnOk_clicked()
 {
     this->close();
 }
+
 void ScoreBoard::closeEvent(QCloseEvent * e){
-    if (flagFrom){
-        flagFrom = 0;
+    if (ScoreboardParent == SPGame){
+        ScoreboardParent = SPMenu;
         e->ignore();
         qApp->quit();
         QProcess::startDetached(qApp->arguments()[0], qApp->arguments());

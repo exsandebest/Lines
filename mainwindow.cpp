@@ -33,9 +33,9 @@ const int fieldSize = 9;
 QMovie * scoreMovie;
 QPushButton * field[fieldSize][fieldSize];
 QPushButton * next3[3] = {nullptr};
-int selectionState = 0;
+int selectionState = SSNone;
 QPoint selected;
-int currentScore;
+int currentScore = 0;
 int path[fieldSize][fieldSize];
 
 MainWindow::MainWindow(QWidget *parent) :

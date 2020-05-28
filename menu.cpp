@@ -15,7 +15,7 @@
 #include "Enums.h"
 
 int GameState = GSExit;
-extern int flagFrom;
+extern int ScoreboardParent;
 QMap <QString, QString> loaded;
 
 Menu::Menu(QWidget *parent) :
@@ -51,7 +51,7 @@ void Menu::on_btnStartGame_clicked()
 
 void Menu::on_btnScoreboard_clicked()
 {
-    flagFrom = 0;
+    ScoreboardParent = SPMenu;
     ScoreBoard w;
     w.exec();
 }
