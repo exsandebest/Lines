@@ -206,6 +206,7 @@ void MainWindow::btnGameClicked(){
             set3balls();
             checkCollapse();
             checkGameEnd();
+            selectionState = SSNone;
         } else if ((MovementType == MTStandard || MovementType == MTHandV) && checkAccess(selected.x(), selected.y(), coords.x(), coords.y())){
             selectionState = SSBlocked;
             setOriginalBorder(selected);
@@ -239,8 +240,8 @@ void MainWindow::btnGameClicked(){
             set3balls();
             checkCollapse();
             checkGameEnd();
+            selectionState = SSNone;
         }
-        selectionState = SSNone;
     }
 }
 
