@@ -6,10 +6,7 @@
 
 int MovementType = MTStandard;
 
-Settings::Settings(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Settings)
-{
+Settings::Settings(QWidget * parent) : QDialog(parent), ui(new Ui::Settings) {
     ui->setupUi(this);
     this->setFixedSize(585,575);
     QPixmap t(":src/img/label_settings.png");
@@ -21,27 +18,25 @@ Settings::Settings(QWidget *parent) :
     QPalette pal;
     pal.setBrush(QPalette::Background,pix);
     this->setPalette(pal);
-    if (MovementType == MTTeleport){
+    if (MovementType == MTTeleport) {
         ui->rbtnTeleport->setChecked(true);
-    } else if (MovementType == MTStandard){
+    } else if (MovementType == MTStandard) {
         ui->rbtnStandard->setChecked(true);
-    } else if (MovementType == MTHandV){
+    } else if (MovementType == MTHandV) {
         ui->rbtnHV->setChecked(true);
     }
 }
 
-Settings::~Settings()
-{
+Settings::~Settings() {
     delete ui;
 }
 
-void Settings::on_btnSaveSettings_clicked()
-{
+void Settings::on_btnSaveSettings_clicked() {
     if (ui->rbtnTeleport->isChecked()) {
         MovementType = MTTeleport;
-    } else if (ui->rbtnStandard->isChecked()){
+    } else if (ui->rbtnStandard->isChecked()) {
         MovementType = MTStandard;
-    } else if (ui->rbtnHV->isChecked()){
+    } else if (ui->rbtnHV->isChecked()) {
         MovementType = MTHandV;
     }
     this->close();

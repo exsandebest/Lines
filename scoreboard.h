@@ -7,12 +7,11 @@ namespace Ui {
 class ScoreBoard;
 }
 
-class ScoreBoard : public QDialog
-{
+class ScoreBoard : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ScoreBoard(QWidget *parent = nullptr);
+    explicit ScoreBoard(QWidget * parent = nullptr);
     ~ScoreBoard();
     QJsonArray sort(QJsonArray arr);
 
@@ -23,7 +22,7 @@ protected:
     void closeEvent(QCloseEvent * e);
 
 private:
-    Ui::ScoreBoard *ui;
+    Ui::ScoreBoard * ui;
 };
 
 #endif // SCOREBOARD_H

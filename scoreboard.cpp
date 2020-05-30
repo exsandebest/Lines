@@ -18,10 +18,7 @@ extern int currentScore;
 extern int ScoreboardParent;
 extern bool needToSave;
 
-ScoreBoard::ScoreBoard(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::ScoreBoard)
-{
+ScoreBoard::ScoreBoard(QWidget * parent) : QDialog(parent), ui(new Ui::ScoreBoard) {
     ui->setupUi(this);
     this->setFixedSize(588, 790);
     QPixmap pix(":src/img/background_scoreboard.jpg");
@@ -33,8 +30,8 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
     QFile file("scoreboard.json");
     file.open(QIODevice::ReadWrite);
     QJsonArray ja = QJsonDocument::fromJson(file.readAll()).array();
-    if (ScoreboardParent == SPGame){
-        if (needToSave){
+    if (ScoreboardParent == SPGame) {
+        if (needToSave) {
             QJsonObject objNew;
             objNew["nickname"] = newNickname;
             QString s1;
@@ -49,7 +46,7 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
     }
     QJsonArray sArr = sort(ja);
 
-    for (int i = 0; i < sArr.count(); ++i){
+    for (int i = 0; i < sArr.count(); ++i) {
         ui->lblList->setText(ui->lblList->text() + sArr.at(i).toObject().value("nickname").toString() + ": " + sArr.at(i).toObject().value("score").toString() + "\n");
     }
 
@@ -58,16 +55,15 @@ ScoreBoard::ScoreBoard(QWidget *parent) :
     file.close();
 }
 
-ScoreBoard::~ScoreBoard()
-{
+ScoreBoard::~ScoreBoard() {
     delete ui;
 }
 
-QJsonArray ScoreBoard::sort(QJsonArray arr){
+QJsonArray ScoreBoard::sort(QJsonArray arr) {
     int len = arr.count();
     int scores[len];
     QMap <int, QString> map;
-    for (int i = 0; i < len; ++i){
+    for (int i = 0; i < len; ++i) {
         QJsonObject obj = arr.at(i).toObject();
         map[obj.value("score").toString().toInt()] = obj.value("nickname").toString();
         scores[i] = obj.value("score").toString().toInt();
@@ -76,7 +72,7 @@ QJsonArray ScoreBoard::sort(QJsonArray arr){
     QJsonArray ans;
     QJsonObject obj;
     QString s;
-    for (int i = len-1; i >=0; --i){
+    for (int i = len-1; i >= 0; --i) {
         s.setNum(scores[i]);
         obj["score"] = s;
         obj["nickname"] = map[scores[i]];
@@ -91,7 +87,7 @@ void ScoreBoard::on_btnOk_clicked()
 }
 
 void ScoreBoard::closeEvent(QCloseEvent * e){
-    if (ScoreboardParent == SPGame){
+    if (ScoreboardParent == SPGame) {
         ScoreboardParent = SPMenu;
         e->ignore();
         qApp->quit();

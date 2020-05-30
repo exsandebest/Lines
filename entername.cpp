@@ -14,10 +14,7 @@ int ScoreboardParent = SPMenu;
 QString newNickname;
 bool needToSave = false;
 
-EnterName::EnterName(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::EnterName)
-{
+EnterName::EnterName(QWidget * parent) : QDialog(parent), ui(new Ui::EnterName) {
     ui->setupUi(this);
     this->setFixedSize(1380, 443);
 
@@ -35,15 +32,13 @@ EnterName::EnterName(QWidget *parent) :
     ui->lblYourScore->setText("Your score is " + QString::number(currentScore));
 }
 
-EnterName::~EnterName()
-{
+EnterName::~EnterName() {
     delete ui;
 }
 
-void EnterName::on_btnSaveName_clicked()
-{
+void EnterName::on_btnSaveName_clicked() {
     QString name = ui->lineName->text();
-    if (name.replace(QRegularExpression("\n"),"").trimmed() != ""){
+    if (name.replace(QRegularExpression("\n"),"").trimmed() != "") {
         newNickname = name;
         hide();
         ScoreboardParent = SPGame;
@@ -56,8 +51,7 @@ void EnterName::on_btnSaveName_clicked()
     }
 }
 
-void EnterName::on_btnDontSave_clicked()
-{
+void EnterName::on_btnDontSave_clicked() {
     hide();
     needToSave = false;
     ScoreboardParent = SPGame;
@@ -65,7 +59,8 @@ void EnterName::on_btnDontSave_clicked()
     win.setModal(true);
     win.exec();
 }
-void EnterName::closeEvent(QCloseEvent *e){
+
+void EnterName::closeEvent(QCloseEvent * e) {
     e->ignore();
     on_btnDontSave_clicked();
 }

@@ -19,10 +19,7 @@ extern int ScoreboardParent;
 extern int MovementType;
 QMap <QString, QString> loaded;
 
-Menu::Menu(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Menu)
-{
+Menu::Menu(QWidget * parent) : QDialog(parent), ui(new Ui::Menu) {
     ui->setupUi(this);
     this->setFixedSize(755, 659);
     GameState = GSExit;
@@ -38,37 +35,32 @@ Menu::Menu(QWidget *parent) :
     this->setPalette(pal);
 }
 
-Menu::~Menu()
-{
+Menu::~Menu() {
     delete ui;
 }
 
 
-void Menu::on_btnStartGame_clicked()
-{
+void Menu::on_btnStartGame_clicked() {
     GameState = GSStartNewGame;
     this->close();
 }
 
-void Menu::on_btnScoreboard_clicked()
-{
+void Menu::on_btnScoreboard_clicked() {
     ScoreboardParent = SPMenu;
     ScoreBoard w;
     w.exec();
 }
 
-void Menu::on_btnQuit_clicked()
-{
+void Menu::on_btnQuit_clicked() {
     GameState = GSExit;
     this->close();
 }
 
 
-void Menu::on_btnLoadGame_clicked()
-{
+void Menu::on_btnLoadGame_clicked() {
     bool ok;
     QString ans = QInputDialog::getText(this, "Key", "Enter your key: ", QLineEdit::Normal, "", &ok);
-    if (ok && !ans.isEmpty()){
+    if (ok && !ans.isEmpty()) {
         QFile file("savedata.json");
         file.open(QIODevice::ReadOnly);
         QJsonObject obj = QJsonDocument::fromJson(file.readAll()).object();
@@ -90,12 +82,11 @@ void Menu::on_btnLoadGame_clicked()
     }
 }
 
-void Menu::closeEvent(QCloseEvent *e){
+void Menu::closeEvent(QCloseEvent * e) {
     e->accept();
 }
 
-void Menu::on_btnSettings_clicked()
-{
+void Menu::on_btnSettings_clicked() {
     Settings w;
     w.exec();
 }

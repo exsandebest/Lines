@@ -7,12 +7,11 @@ namespace Ui {
 class Menu;
 }
 
-class Menu : public QDialog
-{
+class Menu : public QDialog {
     Q_OBJECT
 
 public:
-    explicit Menu(QWidget *parent = 0);
+    explicit Menu(QWidget * parent = 0);
     ~Menu();
 
 private slots:
@@ -26,7 +25,7 @@ protected:
     void closeEvent(QCloseEvent * e);
 
 private:
-    Ui::Menu *ui;
+    Ui::Menu * ui;
 };
 
 #endif // MENU_H
